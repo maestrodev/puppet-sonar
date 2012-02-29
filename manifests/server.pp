@@ -134,6 +134,7 @@ class sonar::server (
   file { "${installdir}/conf/sonar.properties":
     content => template('sonar/sonar.properties.erb'),
     require => Exec['untar'],
+    replace => false,
     notify  => Service[$service],
   } ->
   # The plugins directory. Useful to later reference it from the plugin definition
