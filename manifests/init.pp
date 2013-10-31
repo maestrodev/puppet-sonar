@@ -1,4 +1,5 @@
 # Copyright 2011 MaestroDev
+# Copyright 2013 Karl M. Davis
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class sonar 
+class sonar
   (
     $port = 9000,
     $context_path = '/',
@@ -34,7 +35,7 @@ class sonar
     owner => $user,
     group => $group,
   }
-  
+
   # Install the Sonar repository
   # Reference: http://sonar-pkg.sourceforge.net/
   case $::osfamily {
@@ -49,7 +50,7 @@ class sonar
       fail("The ${module_name} module does not yet support ${::osfamily} operating systems.")
     }
   }
-  
+
   # Install the Sonar package
   package { 'sonar':
     ensure => present,
@@ -60,17 +61,17 @@ class sonar
     ensure     => running,
     hasrestart => true,
   }
-  
+
   # wget from https://github.com/maestrodev/puppet-wget
   include wget
 
   # Sonar properties file.
-  file { "/opt/sonar/conf/sonar.properties":
+  file { '/opt/sonar/conf/sonar.properties':
     content => template('sonar/sonar.properties'),
     require => Package['sonar'],
     notify  => Service[$service],
   }
-  
+
   sonar::plugin { 'sonar-ldap-plugin' :
     ensure     => empty($ldap) ? {true => absent, false => present},
     artifactid => 'sonar-ldap-plugin',
