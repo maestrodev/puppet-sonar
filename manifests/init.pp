@@ -15,10 +15,9 @@
 
 class sonar
   (
-    $port = 9000,
-    $context_path = '/',
-    $ldap = {},
-    $crowd = {},
+    $port =             9000,
+    $context_path =     '/',
+    $ldap =             {},
     $jdbc = {
       url               => 'jdbc:derby://localhost:1527/sonar;create=true',
       driver_class_name => 'org.apache.derby.jdbc.ClientDriver',
@@ -62,9 +61,6 @@ class sonar
     hasrestart => true,
   }
 
-  # wget from https://github.com/maestrodev/puppet-wget
-  include wget
-
   # Sonar properties file.
   file { '/opt/sonar/conf/sonar.properties':
     content => template('sonar/sonar.properties'),
@@ -72,10 +68,11 @@ class sonar
     notify  => Service[$service],
   }
 
+  # For convenience, provide "built-in" support for the Sonar LDAP plugin.
   sonar::plugin { 'sonar-ldap-plugin' :
     ensure     => empty($ldap) ? {true => absent, false => present},
     artifactid => 'sonar-ldap-plugin',
-    version    => '1.0',
-    notify     => Service[$service],
+    version    => '1.3',
+    notify     => Service['sonar'],
   }
 }
