@@ -67,7 +67,7 @@ class sonar
   file { '/opt/sonar/conf/sonar.properties':
     content => template('sonar/sonar.properties'),
     require => Package['sonar'],
-    notify  => Service[$service],
+    notify  => Service['sonar'],
   }
 
   # For convenience, provide "built-in" support for the Sonar LDAP plugin.
