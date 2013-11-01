@@ -42,7 +42,7 @@ class sonar
       include apt
       apt::source { 'sonar':
         location    => 'http://downloads.sourceforge.net/project/sonar-pkg/deb',
-        release     => 'binary',
+        release     => 'binary/',
         repos       => '',
         include_src => false,
       }
