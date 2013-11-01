@@ -52,13 +52,15 @@ class sonar
 
   # Install the Sonar package
   package { 'sonar':
-    ensure => present,
+    ensure  => present,
+    require => Apt::Source['sonar'],
   }
 
   # The sonar package will install this service.
   service { 'sonar':
     ensure     => running,
     hasrestart => true,
+    require    => Package['sonar'],
   }
 
   # Sonar properties file.
@@ -73,6 +75,7 @@ class sonar
     ensure     => empty($ldap) ? {true => absent, false => present},
     artifactid => 'sonar-ldap-plugin',
     version    => '1.3',
+    require    => File['/opt/sonar/conf/sonar.properties'],
     notify     => Service['sonar'],
   }
 }
