@@ -6,29 +6,36 @@ A puppet recipe to install Sonar
 
 # Usage
 
-To install and use Sonar with the default configuration, the following will suffice:
-
+    class { 'maven::maven' : } ->
     class { 'sonar' :
+      version => '2.11',
     }
 
-To customize the default configuration, something similar to the following could be used instead:
+or
 
     $jdbc = {
       url               => 'jdbc:derby://localhost:1527/sonar;create=true',
       driver_class_name => 'org.apache.derby.jdbc.ClientDriver',
+      validation_query  => 'values(1)',
       username          => 'sonar',
       password          => 'sonar',
     }
 
+    class { 'maven::maven' : } ->
     class { 'sonar' :
-      port         => '9000',
-      context_path => '/',
+      arch         => 'linux-x86-64',
+      version      => '2.11',
+      user         => 'sonar',
+      group        => 'sonar',
+      service      => 'sonar',
+      installroot  => '/usr/local',
+      home         => '/var/local/sonar',
+      download_url => 'http://dist.sonar.codehaus.org',
       jdbc         => $jdbc,
+      log_folder   => '/var/local/sonar/logs',
     }
-    
-## Sonar Plugins
 
-The `sonar::plugin` defined type can also be used to install Sonar plugins, e.g.:
+## Install a Sonar plugin
 
     sonar::plugin { 'sonar-twitter-plugin' :
       groupid    => 'org.codehaus.sonar-plugins',
@@ -37,29 +44,15 @@ The `sonar::plugin` defined type can also be used to install Sonar plugins, e.g.
       notify     => Service['sonar'],
     }
 
-### LDAP Plugin
-
-The `sonar` class actually includes "built-in" support for the LDAP plugin to make it easier to use, e.g.:
-
-    $ldap = {
-      url          => 'ldap://myserver.mycompany.com',
-      user_base_dn => 'ou=Users,dc=mycompany,dc=com',
-    }
-
-    class { 'sonar' :
-      ldap => $ldap,
-    }
-
 # Module requirements
 
+* maestrodev/wget
 * maestrodev/maven
 * puppetlabs/stdlib
-* puppetlabs/apt
 
 # License
 
     Copyright 2011-2013 MaestroDev, Inc
-    Copyright 2011-2013 Karl M. Davis
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

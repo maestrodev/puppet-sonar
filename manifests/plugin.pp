@@ -24,7 +24,7 @@ define sonar::plugin
     $ensure = present,
   )
 {
-  $plugin_dir  = '/opt/sonar/extensions/plugins'
+  $plugin_dir  = 'opt/sonar/extensions/plugins'
   $plugin_name = "${artifactid}-${version}.jar"
   $plugin      = "${plugin_dir}/${plugin_name}"
 
