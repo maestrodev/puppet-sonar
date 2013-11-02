@@ -16,15 +16,11 @@
 #
 # A puppet definition for Sonar plugin installation
 #
-define sonar::plugin
-  (
-    $artifactid = $name,
-    $version,
-    $groupid = 'org.codehaus.sonar-plugins',
-    $ensure = present,
-  )
-{
-  $plugin_dir  = '/opt/sonar/extensions/plugins'
+define sonar::plugin(
+  $artifactid = $name, $version,
+  $groupid = 'org.codehaus.sonar-plugins', $ensure = present) {
+
+  $plugin_dir  = "${sonar::home}/extensions/plugins"
   $plugin_name = "${artifactid}-${version}.jar"
   $plugin      = "${plugin_dir}/${plugin_name}"
 
@@ -37,13 +33,13 @@ define sonar::plugin
       artifactid => $artifactid,
       version    => $version,
       before     => File[$plugin],
-      require    => Package['sonar'],
+      require    => File[$plugin_dir],
     }
     file { $plugin:
       ensure => $ensure,
       source => "/tmp/${plugin_name}",
-      owner  => $::sonar::user,
-      group  => $::sonar::group,
+      owner  => $sonar::user,
+      group  => $sonar::group,
       notify => Service['sonar'],
     }
   } else {
