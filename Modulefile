@@ -1,5 +1,5 @@
 name 'maestrodev-sonar'
-version '1.0.4'
+version '1.0.5'
 
 author 'maestrodev'
 license 'Apache License, Version 2.0'
